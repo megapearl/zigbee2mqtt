@@ -58,13 +58,14 @@ export default class Mqtt {
         logger.info(`Connecting to MQTT server at ${mqttSettings.server}`);
 
         const options: IClientOptions = {
+            clean: false,
             will: {
                 topic: `${settings.get().mqtt.base_topic}/bridge/state`,
                 payload: Buffer.from(JSON.stringify({state: "offline"})),
                 retain: !settings.get().mqtt.force_disable_retain,
                 qos: 1,
             },
-            properties: {maximumPacketSize: mqttSettings.maximum_packet_size},
+            properties: { maximumPacketSize: mqttSettings.maximum_packet_size, sessionExpiryInterval: 86400 },
         };
 
         if (mqttSettings.version) {
